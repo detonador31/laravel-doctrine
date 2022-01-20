@@ -3,6 +3,7 @@
 use App\Http\Controllers\ScientistController;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/sci', [ScientistController::class, 'index']);
+Route::get('/sci'       , [ScientistController::class, 'index']);
+Route::get('/login'     , [ScientistController::class, 'login']);
+Route::post('/login'    , [ScientistController::class, 'login']);
+Route::get('/dashboard' , function() {
+    return Inertia::render('Dashboard');
+});
 
-// Route::get('/', function (EntityManager $em) {
-//     dd($em);
+// Route::get('/sci', function () {
+//     return Inertia::render('Scientist');
 // });

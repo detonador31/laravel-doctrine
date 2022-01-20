@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use LaravelDoctrine\ORM\Facades\EntityManager as FacadesEntityManager;
 use Scientist;
 use ScientistRepository;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\VarDumper\VarDumper;
 use Theory;
 
@@ -26,21 +28,17 @@ class ScientistController extends Controller
 
     public function index() {
 
-        // $this->scientists->insert(
-        //     [
-        //         'firstname' => 'Teste',
-        //         'lastname'  => 'de Repository'
-        //     ]
-        // );
+        foreach($this->scientists->findAll() as $sci) {
+            $scientists[] = $sci->toArray();
+        }
+        
+        $scient = $this->em::find('Scientist', 15);
+        $scientist = $scient->toArray();
 
-        // foreach($this->scientists->findAll() as $scientist) {
-        //     echo $scientist->getFullname() . '<br>';
-        // };
+        $title = 'Ola view feita em Vue!';
 
-        $scientists = $this->scientists->findAll();
-        $scientist  = new Scientist();
+        return Inertia::render("Scientist", compact('scientists', 'scientist', 'title'));
 
-        return view("scientist.index", compact('scientists', 'scientist'));
         // $scientist = new Scientist('Junior', 'Soares');
         // $scientist->setFirstname('Junior');
         // $scientist->setLastname('Soares');
@@ -77,4 +75,37 @@ class ScientistController extends Controller
 
         // dd($scientist->getTheories()); 
     }
+
+    private static function toArray($object) {
+        $reflectionClass = new \ReflectionClass($object);
+    
+        $properties = $reflectionClass->getProperties();
+    
+        $array = [];
+        foreach ($properties as $property) {
+            $property->setAccessible(true);
+            $value = $property->getValue($object);
+
+            dd($properties);
+
+        }
+
+
+        die;
+
+        return $array;
+    }  
+
+
+    public function login(Request $request) {
+        if(!empty($request->input())){
+            $request->validate([
+                'email'    => ['required', 'email'],
+                'password' => ['required']
+            ]);
+            return redirect('dashboard');
+        }
+        return Inertia::render("Login");
+    }
+
 }

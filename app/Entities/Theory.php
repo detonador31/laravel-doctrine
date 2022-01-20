@@ -53,4 +53,8 @@ class Theory
     {
         return $this->scientist;
     }
+
+    public function toArray() {
+        return get_object_vars($this);
+    }      
 }

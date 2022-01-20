@@ -80,14 +80,23 @@ class Scientist
         }
     }
 
-    public function getTheories()
+    public function getTheories($array = false)
     {
-        return $this->theories->toArray();
+        $theories = $this->theories->toArray();
+        // retorna array se true ao invés de objetos
+        if($array) {
+            for($i = 0; $i < count($theories ); $i++) {
+                $theories[$i] = $theories[$i]->toArray();
+            }
+            return $theories;
+        }
+
+        return $theories;
     }
 
     public function toArray() {
-        return get_object_vars($this);
-        // alternatively, you could do:
-        // return ['username' => $this->username, 'password' => '****']
+        $array = get_object_vars($this);
+        $array['theories'] = $this->getTheories(true);
+        return $array;
     }      
 }
