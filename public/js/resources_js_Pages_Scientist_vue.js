@@ -353,13 +353,13 @@ var render = function () {
                       ),
                       _vm._v(" "),
                       _c(
-                        "a",
+                        "Link",
                         {
                           staticClass:
                             "font-medium text-gray-500 hover:text-gray-900",
-                          attrs: { href: "#" },
+                          attrs: { href: "/sciIndex" },
                         },
-                        [_vm._v("Features")]
+                        [_vm._v("Cientistas")]
                       ),
                       _vm._v(" "),
                       _c(

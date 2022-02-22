@@ -14,7 +14,7 @@ use Theory;
 class ScientistController extends Controller
 {
     private $em;
-    private $scientists;
+    private $scientistsRp;
 
     /**
      * 
@@ -23,12 +23,12 @@ class ScientistController extends Controller
     {
         $this->em = new FacadesEntityManager;
 
-        $this->scientists = $scientists;
+        $this->scientistsRp = $scientists;
     }    
 
     public function index() {
 
-        foreach($this->scientists->findAll() as $sci) {
+        foreach($this->scientistsRp->findAll() as $sci) {
             $scientists[] = $sci->toArray();
         }
         
@@ -76,26 +76,19 @@ class ScientistController extends Controller
         // dd($scientist->getTheories()); 
     }
 
-    private static function toArray($object) {
-        $reflectionClass = new \ReflectionClass($object);
+    // private static function toArray($object) {
+    //     $reflectionClass = new \ReflectionClass($object);
     
-        $properties = $reflectionClass->getProperties();
+    //     $properties = $reflectionClass->getProperties();
     
-        $array = [];
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $value = $property->getValue($object);
+    //     $array = [];
+    //     foreach ($properties as $property) {
+    //         $property->setAccessible(true);
+    //         $value = $property->getValue($object);
+    //     }
 
-            dd($properties);
-
-        }
-
-
-        die;
-
-        return $array;
-    }  
-
+    //     return $array;
+    // }  
 
     public function login(Request $request) {
         if(!empty($request->input())){
@@ -107,5 +100,54 @@ class ScientistController extends Controller
         }
         return Inertia::render("Login");
     }
+
+    public function scientistIndex($page = 1) {
+        $paginacao = $this->scientistsRp->pagAll(3, 1);
+
+        foreach( $paginacao as $sci) {
+            $scientists[] = $sci->toArray();
+        }
+
+        // dd($this->scientistsRp->pagAll(10, 1) );
+
+        return Inertia::render("ScientistIndex", compact('scientists', 'paginacao' ));
+    }    
+
+
+    public function scientistNew(Request $request, $id = null) {
+        if(!empty($request->input())){
+            $data = $request->all();
+            unset($data['theories']);
+            $id = isset($data['id']) ? $data['id'] : $id;
+            $request->validate([
+                'firstname'    => ['required'],
+                'lastname'     => ['required']
+            ]);
+            if($id) {
+                unset($data['id']);
+                $entity = $this->scientistsRp->update($data, $id);
+            } else {
+                $entity = $this->scientistsRp->insert($data);
+            }
+
+            if($entity) {
+                return redirect('sciIndex');
+            }
+        }
+        $entity = new Scientist();
+        if($id) {
+            $entity = $this->scientistsRp->find($id);
+        }    
+
+        return Inertia::render("ScientistNew", ['entity' => $entity->toArray()]);
+    }      
+
+    public function delete($id) {
+        if($id) {
+            $this->scientistsRp->delete(null, $id);
+        }
+
+        return redirect('sciIndex');
+    }       
 
 }

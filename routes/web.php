@@ -21,8 +21,16 @@ Route::get('/', function () {
 });
 
 Route::get('/sci'       , [ScientistController::class, 'index']);
+Route::get('/sciIndex'  , [ScientistController::class, 'scientistIndex']);
+
 Route::get('/login'     , [ScientistController::class, 'login']);
 Route::post('/login'    , [ScientistController::class, 'login']);
+
+Route::get('/sci-new'           , [ScientistController::class, 'scientistNew']);
+Route::get('/sci-new/{id}'      , [ScientistController::class, 'scientistNew']);
+Route::post('/sci-new'          , [ScientistController::class, 'scientistNew']);
+Route::get('/sci-delete/{id}'   , [ScientistController::class, 'delete']);
+
 Route::get('/dashboard' , function() {
     return Inertia::render('Dashboard');
 });

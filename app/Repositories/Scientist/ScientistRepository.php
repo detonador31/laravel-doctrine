@@ -20,4 +20,6 @@ interface ScientistRepository
 
     public function findAll();
 
+    public function pagAll();
+
 }
