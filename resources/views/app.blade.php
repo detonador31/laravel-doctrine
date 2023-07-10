@@ -8,6 +8,9 @@
     <script src="{{ mix('/js/app.js') }}" defer></script>
 </head>
 <body>
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        {{ Auth::user()->getName() }} <span class="caret"></span>
+</a>
     @inertia
 </body>
 </html>

@@ -102,15 +102,18 @@ class ScientistController extends Controller
     }
 
     public function scientistIndex($page = 1) {
-        $paginacao = $this->scientistsRp->pagAll(3, 1);
+        $title = "Lista de nomes ";
+
+        //dd($page);
+        $paginacao = $this->scientistsRp->pagAll(5, $page);
 
         foreach( $paginacao as $sci) {
             $scientists[] = $sci->toArray();
         }
 
-        // dd($this->scientistsRp->pagAll(10, 1) );
+        //dd($paginacao);
 
-        return Inertia::render("ScientistIndex", compact('scientists', 'paginacao' ));
+        return Inertia::render("ScientistIndex", compact('title', 'scientists', 'paginacao'));
     }    
 
 
